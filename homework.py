@@ -15,20 +15,17 @@ bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
 
 def parse_homework_status(homework):
-    try:
-        homework_name = homework.get('homework_name')
-        if homework_name is None:
-            raise Exception('This name is missing')
-        homework_status = homework.get('status')
-        if homework_status not in ('approved', 'rejected'):
-            raise Exception('status errors')
-        if homework_status == 'rejected':
-            verdict = 'К сожалению в работе нашлись ошибки.'
-        else:
-            verdict = 'Ревьюеру всё понравилось, можно приступать к следующему уроку.'
-        return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
-    except Exception as e:
-        logging.exception(f'error values {e}')
+    homework_name = homework.get('homework_name')
+    if homework_name is None:
+        logging.error(f'Яндекс.Практикум вернул неожиданный ответ: {homework_name}')
+    homework_status = homework.get('status')
+    if homework_status not in ('approved', 'rejected'):
+        logging.error(f'Яндекс.Практикум вернул неожиданный ответ: {homework_status}')
+    if homework_status == 'rejected':
+        verdict = 'К сожалению в работе нашлись ошибки.'
+    else:
+        verdict = 'Ревьюеру всё понравилось, можно приступать к следующему уроку.'
+    return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
 
 
 def get_homework_statuses(current_timestamp):
@@ -41,6 +38,7 @@ def get_homework_statuses(current_timestamp):
         return homework_statuses.json()
     except Exception as e:
         logging.exception(f'error {e}')
+        return {}
 
 
 def send_message(message):
