@@ -18,11 +18,11 @@ def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
     if homework_name is None:
         logging.error(f'Яндекс.Практикум вернул неожиданный ответ: {homework_name}')
-        return "Сервер вернул неожиданный ответ"
+        return 'Сервер вернул неожиданный ответ'
     homework_status = homework.get('status')
     if homework_status not in ('approved', 'rejected'):
         logging.error(f'Непредвиденный статус работы: {homework_status}')
-        return "Сервер вернул непредвиденный статус работы"
+        return 'Сервер вернул непредвиденный статус работы'
     if homework_status == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
     else:
